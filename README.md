@@ -14,4 +14,12 @@ References:
 - Mostly categorical variables, to be encoded in next stage
 
 #### Second Stage: Preprocessing & Feature Engineering
+- Categorical features that are unseen in submission dataset are combined as 'Other' based on a threshold (started at < 10)
+- (Round 1) Label encoding of all categorical features
+- (Round 2) Label encoding categorical features with >100 categories, OHE for 100 or less
+  - (did worse than Round 1)
+
+### Third Stage: Model Selection
+- (Round 1 & 2) Baseline RF, CatBoost (CB), LGBM, & DT - used RF, CB, and LGBM for submission
+- (Round 3) Control tree depth (~10) to prevent overfitting.
 - ongoing...
