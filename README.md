@@ -18,6 +18,8 @@ References:
 - (Round 1) Label encoding of all categorical features
 - (Round 2) Label encoding categorical features with >100 categories, OHE for 100 or less
   - (did worse than Round 1)
+- (Round 3) Removed `date_recorded` and tried `construction_year` as numeric, but worse performance
+  - Renamed all NaN's to 'unknown' and all categorical features to lower case
 
 #### Third Stage: Model Selection
 - (Round 1 & 2) Baseline RF, CatBoost (CB), LGBM, & DT - used RF, CB, and LGBM for submission
@@ -26,5 +28,12 @@ References:
   - Best score of threshold 200. Highest competition score at the moment
 - Separate notebook for CB because different preprocessing
   - Used internal gridsearch function
-  - TBD adjust class weights; may also try SMOTE
-- ongoing...
+  - Adjust class weights (CB)
+    - Worse results than untouched; leave alone
+- (Final Rounds)
+  - CB: Hyperparameter tuning with internal GridSearch (via Training Pools)
+  - RF & LGBM: Kept same preprocessing steps and used Optuna for HP tuning
+ 
+#### Last Stage: Final Model (in progress)
+- Combine all models for a final prediction
+- Share preprocessing steps when possible, then split off into independent functions to produce unique output
