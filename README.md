@@ -21,6 +21,11 @@ References:
 - (Round 3) Removed `date_recorded` and tried `construction_year` as numeric, but worse performance
   - Renamed all NaN's to 'unknown' and all categorical features to lower case
 
+**Note:**
+- Migrated from DataCamp's DataLab to Google Colab
+  - DataLab could not handle the volume of data and has no access to GPU
+  - Unfortunately, Google Colab's GPU and LGBM had issues as well :(
+
 #### Third Stage: Model Selection
 - (Round 1 & 2) Baseline RF, CatBoost (CB), LGBM, & DT - used RF, CB, and LGBM for submission
 - (Round 3) Control tree depth (~10) to prevent overfitting.
