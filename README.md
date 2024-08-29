@@ -6,39 +6,32 @@ Website link:
 References:
 - DrivenData. (2015). Pump it Up: Data Mining the Water Table. Retrieved [July 19, 2024] from https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table.
 
-## Process
+## General Process (more details in each notebook)
 #### First Stage: EDA
-- Looked at all features individually.
+- Looked at all features individually via bar charts
 - 2-3 features to be dropped (either same information, or unable to interpret)
-- Some missing data, to be imputed in next stage
-- Mostly categorical variables, to be encoded in next stage
+- Some missing data to be imputed in next stage
+- Mostly categorical variables; to be encoded in next stage
 
 #### Second Stage: Preprocessing & Feature Engineering
-- Categorical features that are unseen in submission dataset are combined as 'Other' based on a threshold (started at < 10)
-- (Round 1) Label encoding of all categorical features
-- (Round 2) Label encoding categorical features with >100 categories, OHE for 100 or less
-  - (did worse than Round 1)
-- (Round 3) Removed `date_recorded` and tried `construction_year` as numeric, but worse performance
-  - Renamed all NaN's to 'unknown' and all categorical features to lower case
-
-**Note:**
-- Migrated from DataCamp's DataLab to Google Colab
-  - DataLab could not handle the volume of data and has no access to GPU
-  - Unfortunately, Google Colab's GPU and LGBM had issues as well :(
+- Categorical features that are unseen in submission dataset are combined as 'INFREQUENT' based on a threshold (started at < 10)
+- Despite semi-duplicate features (e.g. `region` & `region_code`, removing them hurt submission score)
+- Random Forest (RF) requires more preprocessing steps
+- LGBM and CatBoost (CB) did better with internal one hot encoding
 
 #### Third Stage: Model Selection
-- (Round 1 & 2) Baseline RF, CatBoost (CB), LGBM, & DT - used RF, CB, and LGBM for submission
-- (Round 3) Control tree depth (~10) to prevent overfitting.
-- Adjusted categorical variable threshold and used GridSearch with RF
-  - Best score of threshold 200. Highest competition score at the moment
-- Separate notebook for CB because different preprocessing
-  - Used internal gridsearch function
-  - Adjust class weights (CB)
-    - Worse results than untouched; leave alone
-- (Final Rounds)
-  - CB: Hyperparameter tuning with internal GridSearch (via Training Pools)
-  - RF & LGBM: Kept same preprocessing steps and used Optuna for HP tuning
+- Created models with RF, LGBM, and CB
+- Started with 70/30 train test split, then changed to 80/20
+- Stratified 5-fold cross-validation for all models
+- Hyperparameter tuning with Optuna for RF & LGBM; gridsearch for CB
+- Hovered around an 80% accuracy score (classification rate)
  
-#### Last Stage: Final Model (in progress)
-- Combine all models for a final prediction
-- Share preprocessing steps when possible, then split off into independent functions to produce unique output
+#### Last Stage: Final Model
+- Combine all models for a final prediction via soft voting
+- Highest score from soft voting with 0.8212
+
+#### Note:
+- Initial scores were about ~80% but at some point, something went wrong and all scores went down to ~50% for all models.
+- Tried everything to make the score go back up, but after a week of attempts (23 attempts, actually), I went back to the original preprocessing steps.
+- After keeping the original preprocessing steps, it went smoothly again.
+- Since all models scored similarly, it was likely due to a change in preprocessing steps.
